@@ -47,12 +47,14 @@ import com.jihan.whatsapp.presentation.componenets.EditableTextField
 import com.jihan.whatsapp.presentation.componenets.MyButton
 import com.jihan.whatsapp.ui.theme.bgColorList
 import com.jihan.whatsapp.ui.theme.bgColorListDark
+import javax.inject.Inject
 
 @Composable
 fun LoginScreen(
     goToSignupScreen: () -> Unit = {},
     onLoginClicked: () -> Unit = {},
 ) {
+
 
 
 

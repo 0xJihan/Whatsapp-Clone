@@ -42,7 +42,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -258,15 +257,6 @@ fun SignupScreen(
 
         }
     }
-}
-
-
-
-private fun googleSignUp(){
-
-
-
-
 }
 
 

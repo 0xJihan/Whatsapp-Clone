@@ -12,4 +12,5 @@ sealed interface Destination {
     @Serializable
     data object Home : Destination
 
+
 }

@@ -8,18 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jihan.whatsapp.presentation.destinations.Destination
+import com.jihan.whatsapp.presentation.screens.HomeScreen
 import com.jihan.whatsapp.presentation.screens.LoginScreen
 import com.jihan.whatsapp.presentation.screens.SignupScreen
+import com.jihan.whatsapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +29,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
+            AppTheme {
             MainApp()
+            }
 
         }
 
@@ -82,7 +81,7 @@ class MainActivity : ComponentActivity() {
 
 
             composable<Destination.Home> {
-                Text("Home Screen", style = MaterialTheme.typography.headlineLarge)
+                HomeScreen()
             }
 
 
