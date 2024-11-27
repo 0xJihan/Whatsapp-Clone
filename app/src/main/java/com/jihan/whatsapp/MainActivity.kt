@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.jihan.whatsapp.presentation.destinations.Destination
+import com.jihan.whatsapp.presentation.screens.ChatDetailScreen
 import com.jihan.whatsapp.presentation.screens.HomeScreen
 import com.jihan.whatsapp.presentation.screens.LoginScreen
 import com.jihan.whatsapp.presentation.screens.SignupScreen
@@ -80,8 +82,21 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            composable<Destination.Home> {
-                HomeScreen()
+            composable<Destination.Home>(
+                enterTransition = { slideInHorizontally{it} },
+                exitTransition = { slideOutHorizontally{-it} },
+                popEnterTransition = { slideInHorizontally{-it} }
+            ) {
+                HomeScreen(navController)
+            }
+
+            composable<Destination.ChatDetail>(
+                enterTransition = { slideInHorizontally{it} },
+                exitTransition = { slideOutHorizontally{it} },
+                popExitTransition = { slideOutHorizontally{it} }
+            ) {
+                val chatDetail = it.toRoute<Destination.ChatDetail>()
+                ChatDetailScreen(chatDetail)
             }
 
 

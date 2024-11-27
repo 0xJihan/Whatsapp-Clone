@@ -2,6 +2,7 @@ package com.jihan.whatsapp.data.di
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.jihan.whatsapp.domain.utils.json
 import dagger.Module
@@ -19,12 +20,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesFireStore() = Firebase.firestore
+    fun providesFireStore() : FirebaseFirestore {
+        return Firebase.firestore
+    }
 
 
     @Provides
     @Singleton
-    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+    fun providesFirebaseAuth() : FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
 
 
 

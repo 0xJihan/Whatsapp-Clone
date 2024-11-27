@@ -1,13 +1,17 @@
 package com.jihan.whatsapp.presentation.screens
 
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -20,91 +24,147 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.jihan.whatsapp.R
+import com.jihan.whatsapp.data.models.Message
 import com.jihan.whatsapp.presentation.componenets.ChatBubble
 import com.jihan.whatsapp.presentation.componenets.CircularImage
 import com.jihan.whatsapp.presentation.componenets.ImageButton
-import com.jihan.whatsapp.ui.theme.AppTheme
+import com.jihan.whatsapp.presentation.destinations.Destination
 import com.jihan.whatsapp.ui.theme.primaryColor
 
 
 @Composable
-fun ChatDetailScreen() {
+fun ChatDetailScreen(chatDetail: Destination.ChatDetail) {
+    val context = LocalContext.current
+
+    val senderRoom = chatDetail.senderId+chatDetail.receiverId
+    val receiverRoom = chatDetail.receiverId+chatDetail.senderId
+
+    val firestore = Firebase.firestore
+    val senderDatabase = firestore.collection("chats").document(senderRoom).collection("messages")
+    val receiverDatabase = firestore.collection("chats").document(receiverRoom).collection("messages")
+
+    var message by rememberSaveable { mutableStateOf("") }
+
+    fun sendMessage(msg:String){
+        senderDatabase.add(Message(msg,chatDetail.senderId))
+        receiverDatabase.add(Message(msg,chatDetail.senderId))
+        message = ""
+    }
+
+    var messagesList  by remember {
+        mutableStateOf(listOf<Message>())
+    }
 
 
-    var text by rememberSaveable { mutableStateOf("") }
 
-    Scaffold(Modifier.fillMaxSize(),
+
+    LaunchedEffect(Unit) {
+     senderDatabase.orderBy("timeStamp")
+         .addSnapshotListener{value,error->
+         if (error!=null){
+             Toast.makeText(context, error.localizedMessage, Toast.LENGTH_SHORT).show()
+             return@addSnapshotListener
+         }
+         messagesList = value?.toObjects(Message::class.java) ?: emptyList()
+
+     }
+    }
+
+
+
+
+    Scaffold(
+        Modifier
+            .fillMaxSize(),
         topBar = {
-            ChatTopBar()
+            ChatTopBar(chatDetail.receiverName)
         },
-        bottomBar = {
+
+    ) { paddingValues ->
+
+        Box(Modifier.fillMaxSize().padding(paddingValues)){
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+            ) {
+                if (messagesList.isEmpty()) {
+                    item {
+                        Text("No messages yet",modifier = Modifier.padding(10.dp))
+                    }
+                }
+                else
+                    items(messagesList) {
+                        ChatBubble(it.message!!,it.uid==chatDetail.senderId)
+
+                    }
+            }
+
+            //==========
             var isError by rememberSaveable { mutableStateOf(false) }
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
                     .padding(horizontal = 4.dp),
-                value = text,
+                value = message,
                 trailingIcon = {
-                    ImageButton(Icons.AutoMirrored.Default.Send)
+                    ImageButton(Icons.AutoMirrored.Default.Send){
+                        if (message.isNotEmpty()){
+                           sendMessage(message)
+                        }
+                    }
                 },
-                maxLines = 4,
+                maxLines = 3,
                 onValueChange = {
                     if (it.length <= 3000)
-                        text = it
+                        message = it
 
                     isError = it.length > 3000
                 },
                 placeholder = { Text("Type a message...") },
                 isError = isError,
+            )
 
-                )
         }
 
-    ) { paddingValues ->
-        LazyColumn(
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            items(200) {
-                ChatBubble("Hey, How are you?", true)
-                ChatBubble("Great", false)
-            }
-        }
+
+
+
+
+
 
 
     }
 }
 
-@Preview
-@Composable
-private fun ChatPreview() {
-    AppTheme {
-        ChatDetailScreen()
-    }
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChatTopBar() {
+private fun ChatTopBar(name:String) {
     TopAppBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularImage(R.drawable.profile, 45)
                 Spacer(Modifier.width(20.dp))
-                Text("Abelson Lucas")
+                Text(name, fontSize = 18.sp)
             }
         },
         navigationIcon = {

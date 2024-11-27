@@ -12,5 +12,13 @@ sealed interface Destination {
     @Serializable
     data object Home : Destination
 
+    @Serializable
+    data class ChatDetail(
+        val senderId: String,
+        val receiverId:String,
+        val receiverName:String,
+        val receiverImage:String?=null
+    ) : Destination
+
 
 }

@@ -32,10 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.jihan.whatsapp.presentation.destinations.Destination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
 
 
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -47,7 +51,9 @@ fun HomeScreen() {
                 Text("WhatsApp Clone")
             }, actions = {
                 IconButton(onClick = {
-                    // TODO: Implement onclick later
+                    Firebase.auth.signOut()
+                    navController.popBackStack()
+                    navController.navigate(Destination.Login)
                 }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "More")
                 }
@@ -56,7 +62,7 @@ fun HomeScreen() {
 
         }) { innerPadding ->
 
-        TabHorizontalPager(Modifier.padding(innerPadding))
+        TabHorizontalPager(Modifier.padding(innerPadding),navController)
 
     }
 
@@ -64,7 +70,7 @@ fun HomeScreen() {
 
 }
     @Composable
-    private fun TabHorizontalPager(modifier: Modifier) {
+    private fun TabHorizontalPager(modifier: Modifier,navController: NavController) {
         Column(
             modifier = modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
         ) {
@@ -125,7 +131,14 @@ fun HomeScreen() {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
                     when (index) {
-                        0 -> ChatsScreen()
+                        0 -> ChatsScreen{
+                            navController.navigate(Destination.ChatDetail(
+                                senderId = it.senderId,
+                                receiverId = it.receiverId,
+                                receiverName = it.receiverName,
+                                receiverImage = it.receiverImage
+                            ))
+                        }
                         1 -> StatusScreen()
                         2 -> CallsScreen()
                     }

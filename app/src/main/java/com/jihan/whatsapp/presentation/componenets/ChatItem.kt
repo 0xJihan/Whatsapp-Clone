@@ -1,5 +1,6 @@
 package com.jihan.whatsapp.presentation.componenets
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +18,14 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.jihan.whatsapp.R
 
 @Composable
-fun ChatItem(user: DocumentSnapshot) {
+fun ChatItem(user: DocumentSnapshot, onClick: () -> Unit) {
 
     val name = user.getString("name")
     val email = user.getString("email")
 
-    Row(Modifier.fillMaxWidth()) {
+    Row(Modifier.fillMaxWidth().clickable {
+        onClick()
+    }) {
     CircularImage(R.drawable.ic_launcher_foreground,100)
 
         Spacer(Modifier.width(16.dp))
