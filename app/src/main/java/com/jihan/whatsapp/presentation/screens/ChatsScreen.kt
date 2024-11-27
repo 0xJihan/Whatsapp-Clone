@@ -15,18 +15,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import com.jihan.whatsapp.presentation.componenets.ChatItem
 import com.jihan.whatsapp.presentation.destinations.Destination
+import org.koin.compose.koinInject
 
 @Composable
 fun ChatsScreen(onItemClick : (Destination.ChatDetail) -> Unit) {
     val context = LocalContext.current
     var isLoading by remember { mutableStateOf(false) }
-    val database = Firebase.firestore
+    val database = koinInject<FirebaseFirestore>()
+    val auth = koinInject<FirebaseAuth>()
     var userList by remember { mutableStateOf<QuerySnapshot?>(null) }
 
 
@@ -50,9 +54,9 @@ fun ChatsScreen(onItemClick : (Destination.ChatDetail) -> Unit) {
 
 
 
-            if (user.id!= Firebase.auth.currentUser!!.uid)
+            if (user.id!= auth.currentUser!!.uid)
             ChatItem(user){
-                val senderUid = Firebase.auth.currentUser?.uid
+                val senderUid = auth.currentUser?.uid
                 val receiverId = user.id
                 val receiverName = user.getString("name")
                 val receiverImage = user.getString("profileImage")

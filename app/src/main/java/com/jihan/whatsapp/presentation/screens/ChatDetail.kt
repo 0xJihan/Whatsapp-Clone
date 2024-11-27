@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.jihan.whatsapp.R
 import com.jihan.whatsapp.data.models.Message
@@ -46,6 +47,7 @@ import com.jihan.whatsapp.presentation.componenets.CircularImage
 import com.jihan.whatsapp.presentation.componenets.ImageButton
 import com.jihan.whatsapp.presentation.destinations.Destination
 import com.jihan.whatsapp.ui.theme.primaryColor
+import org.koin.compose.koinInject
 
 
 @Composable
@@ -55,7 +57,7 @@ fun ChatDetailScreen(chatDetail: Destination.ChatDetail) {
     val senderRoom = chatDetail.senderId+chatDetail.receiverId
     val receiverRoom = chatDetail.receiverId+chatDetail.senderId
 
-    val firestore = Firebase.firestore
+    val firestore = koinInject<FirebaseFirestore>()
     val senderDatabase = firestore.collection("chats").document(senderRoom).collection("messages")
     val receiverDatabase = firestore.collection("chats").document(receiverRoom).collection("messages")
 

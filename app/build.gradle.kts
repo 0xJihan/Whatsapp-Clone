@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 
     kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.google.gms.google.services)
@@ -80,9 +78,6 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
 
     //* Hilt DI
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
     //* google fonts
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.core.splashscreen)
@@ -90,6 +85,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    //*koin
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.0-Beta1"))
+    implementation("io.insert-koin:koin-core")
+    implementation("io.insert-koin:koin-androidx-compose")
 
     //* debug
     debugImplementation(libs.leakcanary.android)
@@ -103,9 +103,6 @@ dependencies {
 
 
 
-}
-kapt {
-    correctErrorTypes = true
 }
 
 

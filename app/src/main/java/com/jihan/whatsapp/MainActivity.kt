@@ -19,9 +19,8 @@ import com.jihan.whatsapp.presentation.screens.HomeScreen
 import com.jihan.whatsapp.presentation.screens.LoginScreen
 import com.jihan.whatsapp.presentation.screens.SignupScreen
 import com.jihan.whatsapp.ui.theme.AppTheme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class MainActivity : ComponentActivity() {
 
 
