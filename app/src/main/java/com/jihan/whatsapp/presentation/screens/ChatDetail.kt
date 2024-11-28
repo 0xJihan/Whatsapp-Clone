@@ -37,9 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.jihan.whatsapp.R
 import com.jihan.whatsapp.data.models.Message
 import com.jihan.whatsapp.presentation.componenets.ChatBubble

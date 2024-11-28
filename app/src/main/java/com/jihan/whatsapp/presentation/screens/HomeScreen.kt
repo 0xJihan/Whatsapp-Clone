@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,15 +49,24 @@ fun HomeScreen(navController: NavController) {
         .fillMaxSize()
         .nestedScroll(scrollBehaviour.nestedScrollConnection),
         topBar = {
+            var expanded by remember { mutableStateOf(false) }
             TopAppBar(title = {
                 Text("WhatsApp Clone")
             }, actions = {
                 IconButton(onClick = {
-                    Firebase.auth.signOut()
-                    navController.popBackStack()
-                    navController.navigate(Destination.Login)
+                    expanded = !expanded
                 }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "More")
+                }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = !expanded }) {
+                    DropdownMenuItem(text = { Text("Setting") }, onClick = {})
+                    DropdownMenuItem(text = { Text("Create Group") }, onClick = {})
+                    DropdownMenuItem(text = { Text("Logout") }, onClick = {
+                        expanded = !expanded
+                        Firebase.auth.signOut()
+                        navController.popBackStack()
+                        navController.navigate(Destination.Login)
+                    })
                 }
             }, scrollBehavior = scrollBehaviour
             )
@@ -72,7 +83,9 @@ fun HomeScreen(navController: NavController) {
     @Composable
     private fun TabHorizontalPager(modifier: Modifier,navController: NavController) {
         Column(
-            modifier = modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+            modifier = modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface),
         ) {
 
             //?  Tab Items
@@ -149,6 +162,7 @@ fun HomeScreen(navController: NavController) {
 
         }
     }
+
 
 
 
